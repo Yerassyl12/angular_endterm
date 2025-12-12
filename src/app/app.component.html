@@ -1,0 +1,87 @@
+<div class="app-container">
+  <header class="app-header">
+    <nav class="navbar">
+      <div class="nav-brand">
+        <a routerLink="/" class="brand-link">
+          <span class="brand-icon">✈️</span>
+          <span class="brand-text">{{ 'app.title' | translate }}</span>
+        </a>
+      </div>
+
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+        <span>☰</span>
+      </button>
+
+      <div class="nav-menu" [class.mobile-open]="mobileMenuOpen">
+        <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+          {{ 'nav.home' | translate }}
+        </a>
+        <a routerLink="/products" routerLinkActive="active" (click)="closeMobileMenu()">
+          {{ 'nav.products' | translate }}
+        </a>
+        <a routerLink="/favorites" routerLinkActive="active" (click)="closeMobileMenu()">
+          {{ 'nav.favorites' | translate }}
+        </a>
+
+        <div class="nav-divider"></div>
+
+        <ng-container *ngIf="user$ | async as user; else notLoggedIn">
+          <a routerLink="/profile" routerLinkActive="active" (click)="closeMobileMenu()">
+            {{ 'nav.profile' | translate }}
+          </a>
+          <button class="nav-btn logout-btn" (click)="logout()">
+            {{ 'nav.logout' | translate }}
+          </button>
+        </ng-container>
+
+        <ng-template #notLoggedIn>
+          <a routerLink="/login" routerLinkActive="active" (click)="closeMobileMenu()">
+            {{ 'nav.login' | translate }}
+          </a>
+          <a routerLink="/signup" routerLinkActive="active" class="signup-link" (click)="closeMobileMenu()">
+            {{ 'nav.signup' | translate }}
+          </a>
+        </ng-template>
+
+        <div class="language-selector">
+          <button 
+            (click)="changeLanguage('en')"
+            [class.active]="(currentLang$ | async) === 'en'"
+            class="lang-btn"
+          >
+            EN
+          </button>
+          <button 
+            (click)="changeLanguage('ru')"
+            [class.active]="(currentLang$ | async) === 'ru'"
+            class="lang-btn"
+          >
+            RU
+          </button>
+          <button 
+            (click)="changeLanguage('kz')"
+            [class.active]="(currentLang$ | async) === 'kz'"
+            class="lang-btn"
+          >
+            KZ
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>&copy; 2024 OpenSky Flight Tracker. Data provided by OpenSky Network.</p>
+      <p class="footer-links">
+        <a href="https://opensky-network.org" target="_blank" rel="noopener">OpenSky Network</a>
+      </p>
+    </div>
+  </footer>
+</div>
+
+<div class="mobile-overlay" *ngIf="mobileMenuOpen" (click)="closeMobileMenu()"></div>

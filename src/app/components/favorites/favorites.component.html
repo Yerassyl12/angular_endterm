@@ -1,0 +1,40 @@
+<div class="favorites-container">
+  <h1>{{ 'favorites.title' | translate }}</h1>
+
+  <div *ngIf="loading" class="loading">
+    Loading favorites...
+  </div>
+
+  <div *ngIf="!loading && favoriteProducts.length === 0" class="empty-state">
+    <div class="empty-icon">⭐</div>
+    <h2>{{ 'favorites.empty' | translate }}</h2>
+    <p>Start adding flights to your favorites from the flights list</p>
+    <a routerLink="/products" class="btn-primary">Browse Flights</a>
+  </div>
+
+  <div *ngIf="!loading && favoriteProducts.length > 0" class="favorites-grid">
+    <div *ngFor="let product of favoriteProducts" class="favorite-card">
+      <div class="card-header">
+        <h3>{{ product.icao24 }}</h3>
+        <button 
+          (click)="removeFavorite(product.icao24, $event)"
+          class="remove-btn"
+          title="Remove from favorites"
+        >
+          ✕
+        </button>
+      </div>
+      
+      <div class="card-info">
+        <p><strong>Callsign:</strong> {{ product.callsign || 'N/A' }}</p>
+        <p><strong>Country:</strong> {{ product.origin_country }}</p>
+        <p><strong>Geo Altitude:</strong> {{ product.geo_altitude !== null ? (product.geo_altitude + ' m') : 'N/A' }}</p>
+        <p><strong>Velocity:</strong> {{ product.velocity !== null ? (product.velocity + ' m/s') : 'N/A' }}</p>
+      </div>
+      
+      <a [routerLink]="['/products', product.icao24]" class="details-link">
+        {{ 'products.details' | translate }} →
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <h1>{{ 'signup.title' | translate }}</h1>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">{{ 'login.email' | translate }}</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="email?.invalid && email?.touched"
+        />
+        <div *ngIf="email?.invalid && email?.touched" class="error-text">
+          <span *ngIf="email?.errors?.['required']">{{ 'error.required' | translate }}</span>
+          <span *ngIf="email?.errors?.['email']">{{ 'error.email' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">{{ 'login.password' | translate }}</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.invalid]="password?.invalid && password?.touched"
+        />
+        <div *ngIf="password?.invalid && password?.touched" class="error-text">
+          <span *ngIf="password?.errors?.['required']">{{ 'error.required' | translate }}</span>
+          <span *ngIf="password?.errors?.['passwordStrength']">{{ 'error.password' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="repeatPassword">{{ 'signup.repeatPassword' | translate }}</label>
+        <input
+          type="password"
+          id="repeatPassword"
+          formControlName="repeatPassword"
+          class="form-control"
+          [class.invalid]="(repeatPassword?.invalid || signupForm.errors?.['passwordMismatch']) && repeatPassword?.touched"
+        />
+        <div *ngIf="repeatPassword?.touched" class="error-text">
+          <span *ngIf="repeatPassword?.errors?.['required']">{{ 'error.required' | translate }}</span>
+          <span *ngIf="signupForm.errors?.['passwordMismatch'] && !repeatPassword?.errors?.['required']">
+            {{ 'error.passwordMatch' | translate }}
+          </span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="loading">
+        {{ loading ? 'Loading...' : ('signup.submit' | translate) }}
+      </button>
+    </form>
+
+    <div class="login-link">
+      {{ 'signup.hasAccount' | translate }}
+      <a routerLink="/login">{{ 'nav.login' | translate }}</a>
+    </div>
+  </div>
+</div>

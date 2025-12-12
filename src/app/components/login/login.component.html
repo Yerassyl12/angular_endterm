@@ -1,0 +1,49 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>{{ 'login.title' | translate }}</h1>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">{{ 'login.email' | translate }}</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="email?.invalid && email?.touched"
+        />
+        <div *ngIf="email?.invalid && email?.touched" class="error-text">
+          <span *ngIf="email?.errors?.['required']">{{ 'error.required' | translate }}</span>
+          <span *ngIf="email?.errors?.['email']">{{ 'error.email' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">{{ 'login.password' | translate }}</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.invalid]="password?.invalid && password?.touched"
+        />
+        <div *ngIf="password?.invalid && password?.touched" class="error-text">
+          <span *ngIf="password?.errors?.['required']">{{ 'error.required' | translate }}</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="loading">
+        {{ loading ? 'Loading...' : ('login.submit' | translate) }}
+      </button>
+    </form>
+
+    <div class="signup-link">
+      {{ 'login.noAccount' | translate }}
+      <a routerLink="/signup">{{ 'nav.signup' | translate }}</a>
+    </div>
+  </div>
+</div>

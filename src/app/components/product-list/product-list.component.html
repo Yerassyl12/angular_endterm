@@ -1,0 +1,132 @@
+<div class="product-list-container">
+  <h1>{{ 'products.title' | translate }}</h1>
+
+  <!-- FILTER SECTION -->
+  <div class="filters-section">
+
+    <!-- SEARCH -->
+    <div class="search-box">
+      <input 
+        type="text"
+        [value]="searchTerm"
+        (input)="onSearchChange($any($event.target).value)"
+        [placeholder]="'products.search' | translate"
+        class="search-input"
+      />
+    </div>
+
+    <!-- COUNTRY FILTER -->
+    <div class="filter-group">
+      <label>{{ 'filter.country' | translate }}:</label>
+      <select [(ngModel)]="selectedCountry" (change)="onCountryChange()" class="filter-select">
+        <option value="all">{{ 'filter.all' | translate }}</option>
+        <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+      </select>
+    </div>
+
+    <!-- ALTITUDE FILTER -->
+    <div class="filter-group">
+      <label>Min Altitude (m):</label>
+      <input 
+        type="number"
+        [(ngModel)]="minAltitude"
+        (change)="onMinAltitudeChange()"
+        class="filter-input"
+      />
+    </div>
+
+    <!-- VELOCITY FILTER -->
+    <div class="filter-group">
+      <label>Min Velocity (m/s):</label>
+      <input 
+        type="number"
+        [(ngModel)]="minVelocity"
+        (change)="onMinVelocityChange()"
+        class="filter-input"
+      />
+    </div>
+
+    <!-- ITEMS PER PAGE -->
+    <div class="filter-group">
+      <label>{{ 'pagination.itemsPerPage' | translate }}:</label>
+      <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()" class="filter-select">
+        <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{ option }}</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading">
+    {{ 'products.loading' | translate }}
+  </div>
+
+  <!-- NO RESULTS -->
+  <div *ngIf="!loading && displayedProducts.length === 0" class="no-results">
+    No flights found
+  </div>
+
+  <!-- GRID -->
+  <div *ngIf="!loading && displayedProducts.length > 0" class="products-grid">
+    <div *ngFor="let product of displayedProducts" class="product-card">
+      <div class="product-header">
+        <h3>{{ product.icao24 }}</h3>
+        <button 
+          (click)="toggleFavorite(product.icao24, $event)"
+          class="favorite-btn"
+          [class.active]="isFavorite(product.icao24)"
+        >
+          {{ isFavorite(product.icao24) ? '★' : '☆' }}
+        </button>
+      </div>
+      
+      <div class="product-info">
+        <p><strong>Callsign:</strong> {{ product.callsign || 'N/A' }}</p>
+        <p><strong>Country:</strong> {{ product.origin_country }}</p>
+        <p><strong>Geo Altitude:</strong> {{ product.geo_altitude !== null ? (product.geo_altitude + ' m') : 'N/A' }}</p>
+        <p><strong>Velocity:</strong> {{ product.velocity !== null ? (product.velocity + ' m/s') : 'N/A' }}</p>
+      </div>
+      
+      <a [routerLink]="['/products', product.icao24]" class="details-link">
+        {{ 'products.details' | translate }} →
+      </a>
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  <div *ngIf="!loading && filteredProducts.length > itemsPerPage" class="pagination">
+    <button 
+      (click)="previousPage()" 
+      [disabled]="currentPage === 1"
+      class="pagination-btn"
+    >
+      ← Previous
+    </button>
+    
+    <div class="page-numbers">
+      <button 
+        *ngFor="let page of getPageNumbers()"
+        (click)="goToPage(page)"
+        [class.active]="page === currentPage"
+        class="page-btn"
+      >
+        {{ page }}
+      </button>
+    </div>
+    
+    <button 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages"
+      class="pagination-btn"
+    >
+      Next →
+    </button>
+  </div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info">
+    Showing {{ (currentPage - 1) * itemsPerPage + 1 }} -
+    {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }}
+    of {{ filteredProducts.length }} flights
+  </div>
+</div>

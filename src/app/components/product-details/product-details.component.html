@@ -1,0 +1,118 @@
+<div class="details-container">
+  <div class="header-section">
+    <button (click)="goBack()" class="back-btn">
+      ← {{ 'details.backToList' | translate }}
+    </button>
+    <h1>{{ 'details.title' | translate }}</h1>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Loading...
+  </div>
+
+  <div *ngIf="notFound && !loading" class="not-found">
+    <h2>Flight Not Found</h2>
+    <p>The requested flight could not be found.</p>
+    <button (click)="goBack()" class="btn-primary">Return to List</button>
+  </div>
+
+  <div *ngIf="product && !loading" class="details-card">
+    <div class="details-header">
+      <h2>{{ product.icao24 }}</h2>
+      <button 
+        (click)="toggleFavorite()"
+        class="favorite-btn"
+        [class.active]="isFavorite"
+      >
+        {{ isFavorite ? '★ Remove from Favorites' : '☆ Add to Favorites' }}
+      </button>
+    </div>
+
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="detail-label">ICAO24 Address:</span>
+        <span class="detail-value">{{ product.icao24 }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Callsign:</span>
+        <span class="detail-value">{{ formatValue(product.callsign) }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Origin Country:</span>
+        <span class="detail-value">{{ product.origin_country }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Last Contact:</span>
+        <span class="detail-value">{{ formatTimestamp(product.last_contact) }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Time Position:</span>
+        <span class="detail-value">{{ formatTimestamp(product.time_position) }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Longitude:</span>
+        <span class="detail-value">{{ formatValue(product.longitude) }}°</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Latitude:</span>
+        <span class="detail-value">{{ formatValue(product.latitude) }}°</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Barometric Altitude:</span>
+        <span class="detail-value">{{ product.baro_altitude !== null ? (product.baro_altitude + ' m') : 'N/A' }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Geometric Altitude:</span>
+        <span class="detail-value">{{ product.geo_altitude !== null ? (product.geo_altitude + ' m') : 'N/A' }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">On Ground:</span>
+        <span class="detail-value">{{ formatValue(product.on_ground) }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Velocity:</span>
+        <span class="detail-value">{{ product.velocity !== null ? (product.velocity + ' m/s') : 'N/A' }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">True Track:</span>
+        <span class="detail-value">{{ product.true_track !== null ? (product.true_track + '°') : 'N/A' }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Vertical Rate:</span>
+        <span class="detail-value">{{ product.vertical_rate !== null ? (product.vertical_rate + ' m/s') : 'N/A' }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Squawk:</span>
+        <span class="detail-value">{{ formatValue(product.squawk) }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Special Purpose Indicator:</span>
+        <span class="detail-value">{{ formatValue(product.spi) }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">Position Source:</span>
+        <span class="detail-value">{{ getPositionSource(product.position_source) }}</span>
+      </div>
+
+      <div class="detail-item full-width">
+        <span class="detail-label">Sensors:</span>
+        <span class="detail-value">{{ formatValue(product.sensors) }}</span>
+      </div>
+    </div>
+  </div>
+</div>

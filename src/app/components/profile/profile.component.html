@@ -1,0 +1,66 @@
+<div class="profile-container">
+  <h1>{{ 'profile.title' | translate }}</h1>
+
+  <div *ngIf="user" class="profile-card">
+    <div class="profile-picture-section">
+      <div class="picture-container">
+        <img 
+          *ngIf="profilePictureUrl" 
+          [src]="profilePictureUrl" 
+          alt="Profile Picture"
+          class="profile-picture"
+        />
+        <div *ngIf="!profilePictureUrl" class="placeholder-picture">
+          <span>{{ user.email ? user.email.charAt(0).toUpperCase() : '?' }}</span>
+        </div>
+      </div>
+      
+      <div class="upload-section">
+        <label for="file-upload" class="upload-btn" [class.disabled]="uploading">
+          {{ uploading ? 'Uploading...' : ('profile.uploadPicture' | translate) }}
+        </label>
+        <input 
+          id="file-upload" 
+          type="file" 
+          accept="image/jpeg,image/jpg,image/png"
+          (change)="onFileSelected($event)"
+          [disabled]="uploading"
+          style="display: none;"
+        />
+        
+        <div *ngIf="uploadMessage" class="upload-message" [class.success]="uploadMessage.includes('success')">
+          {{ uploadMessage }}
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-info">
+      <h2>Account Information</h2>
+      
+      <div class="info-item">
+        <span class="info-label">Email:</span>
+        <span class="info-value">{{ user.email }}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">User ID:</span>
+        <span class="info-value">{{ user.uid }}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Email Verified:</span>
+        <span class="info-value">{{ user.emailVerified ? 'Yes' : 'No' }}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Account Created:</span>
+        <span class="info-value">{{ user.metadata.creationTime }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!user" class="no-user">
+    <p>Please log in to view your profile</p>
+    <a routerLink="/login" class="btn-primary">Go to Login</a>
+  </div>
+</div>
